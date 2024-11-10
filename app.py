@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import streamlit as st
-from tensorflow.keras.preprocessing import image
+from PIL import Image  # Importing Pillow for image handling
 
 # Load the trained model
 cnn = tf.keras.models.load_model('trained_plant_disease_model.keras')
@@ -45,9 +45,10 @@ st.title("Plant Disease Classification")
 uploaded_file = st.file_uploader("Choose an image...", type="jpg")
 
 if uploaded_file is not None:
-    # Convert byte data to image
-    img = image.load_img(uploaded_file, target_size=(128, 128))
-    img_array = image.img_to_array(img)
+    # Convert byte data to image using Pillow
+    img = Image.open(uploaded_file)  # Open the image with Pillow
+    img = img.resize((128, 128))  # Resize to target size (128x128)
+    img_array = np.array(img)  # Convert to numpy array
     img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
 
     # Predict using the model
